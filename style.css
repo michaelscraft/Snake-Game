@@ -1,3 +1,4 @@
+
 html, body, #field {
 	height: 100%;
 	overflow: hidden;
@@ -34,10 +35,4 @@ html, body, #field {
 }
 #score_display{
 }
-<<<<<<< HEAD
-/* @media only screen and (max-width:40em){} */
-    /* Medium screen min-width 641px */ 
-/* @media only screen and (min-width:40.063em){} */
-    /* Medium screen min-width 641px and max-width 1024px */
-=======
->>>>>>> 6aaf9a43cad6ed3c22216805b642bcac4a1e2562
+
