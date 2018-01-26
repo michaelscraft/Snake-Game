@@ -209,7 +209,7 @@ var mobileScreenSwipe = {
 		    }
 		    /* reset values */
 		   this.xDown = null;
-		   this.yDown = null; 
+		   this.yDown = null;  
 		}, 
 };
 init();
