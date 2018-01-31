@@ -27,7 +27,7 @@ var snake = {
 		allXs     : [],
 		allYs     : [],
 		lastClickDirection : null,
-		lastSwipeDirection : false,
+		lastSwipeDirection : null,
 		currentPosition : snakeHead.getBoundingClientRect(),
 		outOnScreenRight : screenWidth - snakeWidth,
 		outOnScreenDown : screenHeight - snakeHeight,
@@ -36,6 +36,7 @@ var snake = {
 			var moveUp = parseInt(window.getComputedStyle(snakeHead).top);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
+			snakeHead.style.borderRadius = "200px 200px 70px 70px";
 
 			snakeHead.style.top = moveUp - snakeHeight + "px";
 			square.followHead();
@@ -48,6 +49,7 @@ var snake = {
 			var moveDown = parseInt(window.getComputedStyle(snakeHead).top);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
+			snakeHead.style.borderRadius = "70px 70px 200px 200px";
 
 			snakeHead.style.top = moveDown + snakeHeight + "px";
 			square.followHead();
@@ -60,7 +62,8 @@ var snake = {
 			var moveLeft = parseInt(window.getComputedStyle(snakeHead).left);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
-			
+			snakeHead.style.borderRadius = "200px 70px 70px 200px";
+
 			snakeHead.style.left = moveLeft - snakeWidth + "px";
 			square.followHead();
 
@@ -72,6 +75,7 @@ var snake = {
 			var moveRight = parseInt(window.getComputedStyle(snakeHead).left);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
+			snakeHead.style.borderRadius = "70px 200px 200px 70px";
 
 			snakeHead.style.left = moveRight + snakeWidth + "px";
 			square.followHead();
@@ -81,11 +85,16 @@ var snake = {
 			}		
 		},
 		pickUpSquare : function (){
-			if(square.genNumY === snake.headPrevY && square.genNumX === snake.headPrevX){
+			if(square.genNumY === snake.posY && square.genNumX === snake.posX){
 				squareClassNew.classList.add("connected");
 				squareClassNew.classList.remove("new");
 				square.score += 5;
+
 				totalScore.textContent = square.score;
+				totalScore.classList.add("glow");
+				setTimeout(function() {
+   						 totalScore.classList.remove("glow");
+				}, 1200);
 			};	
 		},
 		increaseSpeed : function (){
@@ -107,13 +116,14 @@ var square = {
 			for(var i = 0; i < connectedSquares.length ; i++){
 				connectedSquares[i].style.left = snake.allXs[connectedSquares.length - i] + "px";
 				connectedSquares[i].style.top = snake.allYs[connectedSquares.length -i] + "px";
-				
+
 				//game over
 				if(snake.allYs[i] === snake.posY && snake.allXs[i] === snake.posX){
 					if (confirm('Game Over! Would you like to play again?')) {
 			    		window.location.reload();
 					} else {
-						totalScoreScreen.innerHTML = "</h2>Nice! You got " + this.score + " points</h2>";
+						totalScoreScreen.classList.add("glow");
+						totalScoreScreen.innerHTML = "</h2>Nice! You got " + square.score + " points</h2></br> <span class=\"glow\">Play Again?</span>";
 						clearInterval(snake.downS);
 						clearInterval(snake.rightS);
 						clearInterval(snake.upS);
@@ -128,7 +138,8 @@ var square = {
 			if(snake.allYs.length > connectedSquares.length){
 				snake.allYs.splice(0, 1);
 			};
-			square.newSquare();
+			square.newSquare();	
+			snake.pickUpSquare();
 		},
 		newSquare : function(){
 			var divNew = document.createElement('div');
@@ -140,9 +151,7 @@ var square = {
 				divNew.style.top = this.newGetRandomY() + "px";
 
 				fieldArea.appendChild(divNew);
-				
 			}	
-			snake.pickUpSquare();
 		},
 		newGetRandomX : function(){
 			this.genNumX = Math.round((Math.random()*(screenWidth-0)+0)/snakeWidth)*snakeWidth;
@@ -153,7 +162,7 @@ var square = {
 			return square.genNumY;
 		},
 };
-var mobileScreenSwipe = {
+var onSwipe = {
 		xDown : null,                                                        
 		yDown : null,                                                        
 
@@ -211,72 +220,72 @@ var mobileScreenSwipe = {
 		   this.yDown = null; 
 		}, 
 };
-init();
-
+var onKeyPress = {
+		keyCode : null,
+		setMovement : function(e){
+			this.keyCode = e.keyCode;
+			if(snake.lastClickDirection === this.keyCode){
+				return false;
+			};
+			if(this.keyCode === 38 && snake.lastClickDirection === 40){
+				return false;
+			};
+			if(this.keyCode === 40 && snake.lastClickDirection === 38){
+				return false;
+			};
+			if(this.keyCode === 39 && snake.lastClickDirection === 37){
+				return false;
+			};
+			if(this.keyCode === 37 && snake.lastClickDirection === 39){
+				return false;
+			};
+			switch (this.keyCode) {
+			case 38:
+			 	snake.lastClickDirection = this.keyCode;		 
+				clearInterval(snake.leftS);
+				clearInterval(snake.rightS);
+				clearInterval(snake.downS);	
+				snake.upS = setInterval(snake.snakeUp, 200);
+				break;
+			case 39:
+				snake.lastClickDirection = this.keyCode;	
+				clearInterval(snake.downS);
+			 	clearInterval(snake.leftS);
+				clearInterval(snake.upS);
+			 	snake.rightS = setInterval(snake.snakeRight, 200);
+				break;
+			case 40:
+				snake.lastClickDirection = this.keyCode;
+				clearInterval(snake.leftS);
+				clearInterval(snake.rightS);
+				clearInterval(snake.upS);	
+				snake.downS  = setInterval(snake.snakeDown, 200);
+				break;
+			case 37:
+				snake.lastClickDirection = this.keyCode;
+				clearInterval(snake.downS);
+				clearInterval(snake.rightS);
+				clearInterval(snake.upS);
+				snake.leftS  = setInterval(snake.snakeLeft, 200); 
+				break;
+			case 27:
+				console.log('Snake Paused');
+				// alert("Game Paused")
+				clearInterval(snake.downS);
+				clearInterval(snake.rightS);
+				clearInterval(snake.upS);
+				clearInterval(snake.leftS);
+				break;
+			}
+		},
+};
+function snakeGame(){
+	document.addEventListener('touchstart', onSwipe.handleTouchStart, false);        
+	document.addEventListener('touchmove', onSwipe.handleTouchMove, false);
+	document.addEventListener("keydown", onKeyPress.setMovement, false);
+};
 function init(){
 	snakeGame();
 };
-function snakeGame(){
-	if (screenWidth < 1024){
-		document.addEventListener('touchstart', mobileScreenSwipe.handleTouchStart, false);        
-		document.addEventListener('touchmove', mobileScreenSwipe.handleTouchMove, false);
-	}
-	else{
-		document.addEventListener("keydown", function(e){
-			var keyCode = e.keyCode;
-			if(snake.lastClickDirection === keyCode){
-				return false;
-			};
-			if(keyCode === 38 && snake.lastClickDirection === 40){
-				return false;
-			};
-			if(keyCode === 40 && snake.lastClickDirection === 38){
-				return false;
-			};
-			if(keyCode === 39 && snake.lastClickDirection === 37){
-				return false;
-			};
-			if(keyCode === 37 && snake.lastClickDirection === 39){
-				return false;
-			};
-			switch (keyCode) {
-				case 38:
-				 	snake.lastClickDirection = keyCode;		 
-					clearInterval(snake.leftS);
-					clearInterval(snake.rightS);
-					clearInterval(snake.downS);
-					snake.upS = setInterval(snake.snakeUp, 200);
-					break;
-				case 39:
-					snake.lastClickDirection = keyCode;	
-					clearInterval(snake.downS);
-				 	clearInterval(snake.leftS);
-					clearInterval(snake.upS);
-				 	snake.rightS = setInterval(snake.snakeRight, 200);
-					break;
-				case 40:
-					snake.lastClickDirection = keyCode;
-					clearInterval(snake.leftS);
-					clearInterval(snake.rightS);
-					clearInterval(snake.upS);
-					snake.downS  = setInterval(snake.snakeDown, 200);
-					break;
-				case 37:
-					snake.lastClickDirection = keyCode;
-					clearInterval(snake.downS);
-					clearInterval(snake.rightS);
-					clearInterval(snake.upS);
-					snake.leftS  = setInterval(snake.snakeLeft, 200); 
-					break;
-				case 27:
-					console.log('Snake Paused');
-					// alert("Game Paused")
-					clearInterval(snake.downS);
-					clearInterval(snake.rightS);
-					clearInterval(snake.upS);
-					clearInterval(snake.leftS);
-					break;
-			}
-		});
-	}
-};
+init();
+

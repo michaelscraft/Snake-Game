@@ -1,19 +1,29 @@
-
+@font-face {
+	font-family:"Monoton";
+	src: url("font/Monoton-Regular.eot?") 
+	format("eot"),url("font/Monoton-Regular.woff") 
+	format("woff"),url("font/Monoton-Regular.ttf") 
+	format("truetype"),url("font/Monoton-Regular.svg#Monoton-Regular") 
+	format("svg");
+	font-weight: 900;
+	font-style:normal;
+}
 html, body, #field {
+	width: 100%;
 	height: 100%;
 	overflow: hidden;
 	margin: 0;
 	padding: 0;
+	color: white;
 }
 #field {
 	width: 100%;
 	height: 100%;
 	display: block;
 	position: relative;
-	background-image: url('background.png');
+	background-image: url('back.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-position: 0% -40%; 
     background-size: cover;
 }
 #snake, .square {
@@ -22,17 +32,97 @@ html, body, #field {
 	width: 	2rem;
 	height: 2rem;
 	z-index: 2;
-	background-color: black;
+	background-color: transparent;
 	margin: 0;
 	border: 2px solid white;
-	text-align: center;
+	
+}
+.square {
+	border-radius: 10px 10px;
 }
 .score {
 	position: absolute;
 	width: 100%;
 	z-index: 1;
 	text-align: center;
+	color: rgba(255, 15, 119, 0.6);
+  	font-family: Monoton, cursive;
+  	font-size: 2em;
+  	letter-spacing: 10px;
 }
-#score_display{
+.glow {
+	-webkit-animation: neon 1.2s ease-in-out;
+  	animation: neon 1.2s ease-in-out;
+} 
+.new {
+ 	-webkit-animation: pulse 1.5s infinite;
+ 	animation: pulse 1.5s infinite;
+/* 	transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);  */
 }
+
+@-webkit-keyframes neon {
+   0% {
+    -webkit-text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 15, 119, 0.6), 0 0 70px rgba(255, 15, 119, 0.6), 0 0 80px rgba(255, 15, 119, 0.6), 0 0 100px rgba(255, 15, 119, 0.6), 0 0 150px rgba(255, 15, 119, 0.6);
+  }
+  	50% {
+    -webkit-text-shadow: 0 0 5px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 255, 255, 0.9), 0 0 15px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 15, 119, 1), 0 0 35px rgba(255, 15, 119, 1), 0 0 40px rgba(255, 15, 119, 1), 0 0 50px rgba(255, 15, 119, 1), 0 0 75px rgba(255, 15, 119, 1);
+  }
+  	100%{
+  	-webkit-text-shadow: 0 0 3px rgba(255, 255, 255, 0), 0 0 6px rgba(255, 255, 255, 0.0), 0 0 9px rgba(255, 255, 255, 0), 0 0 12px rgba(255, 15, 119, 0.6), 0 0 15px rgba(255, 15, 119, 0.6), 0 0 18px rgba(255, 15, 119, 0.6), 0 0 21px rgba(255, 15, 119, 0.6), 0 0 26px rgba(255, 15, 119, 0.6);
+  }
+}
+@keyframes neon {
+    0% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.3), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 15, 119, 0.6), 0 0 70px rgba(255, 15, 119, 0.6), 0 0 80px rgba(255, 15, 119, 0.6), 0 0 100px rgba(255, 15, 119, 0.6), 0 0 150px rgba(255, 15, 119, 0.6);
+  }
+  	50% {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.9), 0 0 10px rgba(255, 255, 255, 0.9), 0 0 15px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 15, 119, 1), 0 0 35px rgba(255, 15, 119, 1), 0 0 40px rgba(255, 15, 119, 1), 0 0 50px rgba(255, 15, 119, 1), 0 0 75px rgba(255, 15, 119, 1);
+  }
+  	100%{
+  	text-shadow: 0 0 3px rgba(255, 255, 255, 0), 0 0 6px rgba(255, 255, 255, 0.0), 0 0 9px rgba(255, 255, 255, 0), 0 0 12px rgba(255, 15, 119, 0.6), 0 0 15px rgba(255, 15, 119, 0.6), 0 0 18px rgba(255, 15, 119, 0.6), 0 0 21px rgba(255, 15, 119, 0.6), 0 0 26px rgba(255, 15, 119, 0.6);
+  }
+}
+
+@-webkit-keyframes pulse {
+  	0% {
+  		-webkit-background-color: rgba(255,255,255, 0.5);
+		-webkit-border-color: rgba(255,255,255, 0.5);
+    	-webkit-box-shadow: 0 0 0 0 rgba(255,255,255, 0.7);
+  }
+  	70% {
+  		-webkit-background-color: rgba(255,255,255, 0);
+  		-webkit-border-color: rgba(255,255,255, 0);
+    	-webkit-box-shadow: 0 0 0 10px rgba(255,255,255, 0);
+  }
+ 	100% {
+ 		-webkit-background-color: rgba(255,255,255, 0);
+ 		-webkit-border-color: rgba(255,255,255, 0);
+     	-webkit-box-shadow: 0 0 0 0 rgba(255,255,255, 0);
+  }
+}
+@keyframes pulse {
+  	0% {
+  		background-color: rgba(255,255,255, 0.7);
+		border-color: rgba(255,255,255, 0.5);
+   		box-shadow: 0 0 0 0 rgba(255,255,255, 0.7);
+  }
+  	70% {
+  		background-color: rgba(255,255,255, 0);
+  		border-color: rgba(255,255,255, 0.8);
+      	box-shadow: 0 0 0 10px rgba(255,255,255, 0);
+  }
+  	100% {
+  		background-color: rgba(255,255,255, 0);
+  		border-color: rgba(255,255,255, 1);
+     	box-shadow: 0 0 0 0 rgba(255,255,255, 0);
+  }
+}
+
+
+
+
+
+
+
 
