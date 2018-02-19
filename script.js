@@ -1,19 +1,16 @@
-//develop snake with on key press moving
 "use strict"
-var snakeHead    		= document.querySelector("#snake"),
+let snakeHead    		= document.querySelector("#snake"),
  	fieldArea    		= document.querySelector("#field"),
  	connectedSquares 	= document.getElementsByClassName("connected"),
  	totalScore			= document.querySelector("#score_display span"),
  	totalScoreScreen	= document.querySelector("#score_display"),
+ 	clearText			= document.querySelector(".clearText"),
  	squareClassNew		= "",
  	screenWidth  		= window.innerWidth,
 	screenHeight 		= window.innerHeight,
 	snakeWidth   		= snakeHead.getBoundingClientRect().width,
 	snakeHeight  		= snakeHead.getBoundingClientRect().height;
-
-
-
-var snake = {
+const snake = {
 		upS       : " ",
 		downS     : " ",
 		leftS     : " ",
@@ -33,7 +30,7 @@ var snake = {
 		outOnScreenDown : screenHeight - snakeHeight,
 
 		snakeUp : function(){
-			var moveUp = parseInt(window.getComputedStyle(snakeHead).top);
+			let moveUp = parseInt(window.getComputedStyle(snakeHead).top);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
 			snakeHead.style.borderRadius = "200px 200px 70px 70px";
@@ -46,7 +43,7 @@ var snake = {
 			}		
 		},
 		snakeDown : function(){
-			var moveDown = parseInt(window.getComputedStyle(snakeHead).top);
+			let moveDown = parseInt(window.getComputedStyle(snakeHead).top);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
 			snakeHead.style.borderRadius = "70px 70px 200px 200px";
@@ -59,7 +56,7 @@ var snake = {
 			}			
 		},
 		snakeLeft : function(){
-			var moveLeft = parseInt(window.getComputedStyle(snakeHead).left);
+			let moveLeft = parseInt(window.getComputedStyle(snakeHead).left);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
 			snakeHead.style.borderRadius = "200px 70px 70px 200px";
@@ -72,7 +69,7 @@ var snake = {
 			};			
 		},
 		snakeRight : function(){
-			var moveRight = parseInt(window.getComputedStyle(snakeHead).left);
+			let moveRight = parseInt(window.getComputedStyle(snakeHead).left);
 			snake.headPrevY = snakeHead.getBoundingClientRect().y;
 			snake.headPrevX = snakeHead.getBoundingClientRect().x;
 			snakeHead.style.borderRadius = "70px 200px 200px 70px";
@@ -102,7 +99,7 @@ var snake = {
 		},
 };
 
-var square = {
+const square = {
 		genNumX : " ",
 		genNumY : " ",
 		score : 0,
@@ -113,7 +110,7 @@ var square = {
 			snake.allXs.push(snake.headPrevX);
 			snake.allYs.push(snake.headPrevY);
 
-			for(var i = 0; i < connectedSquares.length ; i++){
+			for(let i = 0; i < connectedSquares.length ; i++){
 				connectedSquares[i].style.left = snake.allXs[connectedSquares.length - i] + "px";
 				connectedSquares[i].style.top = snake.allYs[connectedSquares.length -i] + "px";
 
@@ -123,7 +120,8 @@ var square = {
 			    		window.location.reload();
 					} else {
 						totalScoreScreen.classList.add("glow");
-						totalScoreScreen.innerHTML = "</h2>Nice! You got " + square.score + " points</h2></br> <span class=\"glow\">Play Again?</span>";
+						totalScoreScreen.innerHTML = "</h2>Nice! You got " + square.score + " points</h2></br>";
+						clearText.innerHTML = "PS: to play again refresh page";
 						clearInterval(snake.downS);
 						clearInterval(snake.rightS);
 						clearInterval(snake.upS);
@@ -142,7 +140,7 @@ var square = {
 			snake.pickUpSquare();
 		},
 		newSquare : function(){
-			var divNew = document.createElement('div');
+			let divNew = document.createElement('div');
 			squareClassNew = document.querySelector(".new");
 			if(!fieldArea.lastElementChild.classList.contains("new")){	
 				divNew.classList.add("square","new");
@@ -162,24 +160,28 @@ var square = {
 			return square.genNumY;
 		},
 };
-var onSwipe = {
+const onSwipe = {
 		xDown : null,                                                        
 		yDown : null,                                                        
 
 		handleTouchStart: function (evt) {                                         
     		this.xDown = evt.touches[0].clientX;                                      
-    		this.yDown = evt.touches[0].clientY;                                      
+    		this.yDown = evt.touches[0].clientY;
+    		for(let i = 0; i < fieldArea.children.length; i++){
+				fieldArea.children[i].classList.remove("hidden");
+			}
+			clearText.innerHTML = "";                                      
 		},  
 		handleTouchMove: function (evt) {
     		if ( ! this.xDown || ! this.yDown ) {
         		return;
    			 }
 
-		    var xUp = evt.touches[0].clientX;                                    
-		    var yUp = evt.touches[0].clientY;
+		    let xUp = evt.touches[0].clientX;                                    
+		    let yUp = evt.touches[0].clientY;
 
-		    var xDiff = this.xDown - xUp;
-		    var yDiff = this.yDown - yUp;
+		    let xDiff = this.xDown - xUp;
+		    let yDiff = this.yDown - yUp;
 
 		    if ( Math.abs( xDiff ) > Math.abs( yDiff ) ) {
 
@@ -220,9 +222,13 @@ var onSwipe = {
 		   this.yDown = null; 
 		}, 
 };
-var onKeyPress = {
+const onKeyPress = {
 		keyCode : null,
 		setMovement : function(e){
+			for(let i = 0; i < fieldArea.children.length; i++){
+				fieldArea.children[i].classList.remove("hidden");
+			}
+			clearText.innerHTML = "";
 			this.keyCode = e.keyCode;
 			if(snake.lastClickDirection === this.keyCode){
 				return false;
@@ -284,8 +290,4 @@ function snakeGame(){
 	document.addEventListener('touchmove', onSwipe.handleTouchMove, false);
 	document.addEventListener("keydown", onKeyPress.setMovement, false);
 };
-function init(){
-	snakeGame();
-};
-init();
-
+snakeGame();

@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<title>Snake game</title>
+    <meta name="description" content="Snake game" />
+    <meta name="keywords" content="Snake game" />
+    <meta name="author" content="Michael Roshchyn" />
+    <link rel="shortcut icon" type="image/png" href="../../favicon.png"/>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	
 </head>
 <body>
 	<div class="score">
 		<h1 id="score_display"><span>0</span> POINTS</h1>
+		<span class="clearText"> Use arrow keys or swipe to start</span>
 	</div>
 	<div id="field">
-		<div id="snake"></div>
-		<div class="square connected"></div>
+		<div id="snake" class="hidden"></div>
+		<div class="square connected hidden"></div>
 	</div>
 	
 <script type="text/javascript" src="script.js"></script>
