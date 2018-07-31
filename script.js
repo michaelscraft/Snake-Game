@@ -1,5 +1,5 @@
 "use strict"
-let snakeHead    		= document.querySelector("#snake"),
+const snakeHead    		= document.querySelector("#snake"),
  	fieldArea    		= document.querySelector("#field"),
  	connectedSquares 	= document.getElementsByClassName("connected"),
  	totalScore			= document.querySelector("#score_display span"),
